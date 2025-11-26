@@ -107,21 +107,11 @@ export const PremiumCalendar: React.FC<PremiumCalendarProps> = ({
       {/* Timeline View */}
       {tasks.length > 0 ? (
         <div className="space-y-4">
-          <div className="flex items-center justify-between mb-6">
+          <div className="mb-6">
             <h3 className="text-2xl font-serif italic text-white flex items-center gap-3">
               <Calendar size={24} />
               <span>Tagesplan</span>
             </h3>
-            
-            {onAddTask && (
-              <button
-                onClick={onAddTask}
-                className="backdrop-blur-md bg-white/[0.05] hover:bg-white/[0.12] border border-white/[0.12] hover:border-blue-400/50 text-white text-sm font-medium py-2.5 px-5 rounded-full transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-blue-500/20 group"
-              >
-                <Plus size={16} className="group-hover:rotate-90 transition-transform duration-200" />
-                <span>Aufgabe hinzufügen</span>
-              </button>
-            )}
           </div>
           
           <div className="space-y-3">

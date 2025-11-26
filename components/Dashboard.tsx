@@ -170,7 +170,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     
     setIsAddingTask(true);
     try {
-      // Analyze the new task with AI
+      // Analyze the new task with AI (falls back automatically if API fails)
       const analysis = await analyzeTasks(taskDescription);
       
       if (analysis.tasks.length > 0) {
@@ -198,9 +198,60 @@ export const Dashboard: React.FC<DashboardProps> = ({
         await saveDayPlan(user.uid, updatedPlan);
         onDayPlanUpdate(updatedPlan);
         setShowAddTask(false);
+      } else {
+        // Fallback: Create simple task if analysis returned no tasks
+        const task: Task = {
+          id: `task-${Date.now()}`,
+          title: taskDescription.trim(),
+          completed: false,
+          category: 'Erledigung',
+          duration: 60,
+          requiresProof: false,
+          proofType: null,
+          proofDescription: '',
+          suggestedStartTime: '09:00',
+          suggestedEndTime: '10:00',
+          status: 'pending',
+          createdAt: Date.now(),
+        };
+        
+        const updatedTasks = [...dayPlan.tasks, task];
+        const updatedPlan: DayPlan = { ...dayPlan, tasks: updatedTasks };
+        
+        await saveDayPlan(user.uid, updatedPlan);
+        onDayPlanUpdate(updatedPlan);
+        setShowAddTask(false);
       }
     } catch (error) {
-      console.error('Failed to add task:', error);
+      // This should rarely happen now since analyzeTasks has fallback
+      console.warn('Failed to add task (using fallback):', error);
+      
+      // Ultimate fallback: Create task directly
+      const task: Task = {
+        id: `task-${Date.now()}`,
+        title: taskDescription.trim() || 'Neue Aufgabe',
+        completed: false,
+        category: 'Erledigung',
+        duration: 60,
+        requiresProof: false,
+        proofType: null,
+        proofDescription: '',
+        suggestedStartTime: '09:00',
+        suggestedEndTime: '10:00',
+        status: 'pending',
+        createdAt: Date.now(),
+      };
+      
+      const updatedTasks = [...dayPlan.tasks, task];
+      const updatedPlan: DayPlan = { ...dayPlan, tasks: updatedTasks };
+      
+      try {
+        await saveDayPlan(user.uid, updatedPlan);
+        onDayPlanUpdate(updatedPlan);
+        setShowAddTask(false);
+      } catch (saveError) {
+        console.error('Failed to save task:', saveError);
+      }
     } finally {
       setIsAddingTask(false);
     }
@@ -208,8 +259,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
-      {/* Header - Minimalist (wie im Screenshot) */}
-      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-black/40 border-b border-white/[0.08]">
+      {/* Header - Minimalist (wie im Screenshot) - mit iPhone Safe Area */}
+      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-black/40 border-b border-white/[0.08]" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -276,17 +327,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 </div>
               )}
               
-              {/* Add Task Button (only if plan exists) */}
-              {dayPlan && (
-                <button
-                  onClick={() => setShowAddTask(true)}
-                  className="backdrop-blur-md bg-white/[0.08] hover:bg-white/[0.12] border border-white/[0.15] hover:border-blue-400/50 text-white text-sm font-medium px-4 py-2 rounded-full transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-blue-500/20"
-                >
-                  <Plus size={18} />
-                  <span className="hidden lg:inline">Aufgabe</span>
-                </button>
-              )}
-              
               {/* User Name */}
               <div className="hidden lg:block text-sm text-white/60">
                 {user.name}
@@ -315,7 +355,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 bg-black/80 backdrop-blur-md z-40" onClick={() => setMobileMenuOpen(false)}>
-          <div className="absolute top-16 left-0 right-0 bg-[#0a0a0a] border-b border-white/[0.08] p-6">
+          <div className="absolute left-0 right-0 bg-[#0a0a0a] border-b border-white/[0.08] p-6" style={{ top: 'calc(4rem + env(safe-area-inset-top))' }}>
             <nav className="space-y-2">
               <button
                 onClick={() => { setView('overview'); setMobileMenuOpen(false); }}
@@ -332,20 +372,43 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 </button>
               )}
               {dayPlan && (
-                <button
-                  onClick={() => { setView('active-day'); setMobileMenuOpen(false); }}
-                  className="w-full text-left px-4 py-3 text-white/80 hover:bg-white/[0.05] rounded-lg transition-colors"
-                >
-                  Aktueller Tag
-                </button>
+                <>
+                  <button
+                    onClick={() => { setView('active-day'); setMobileMenuOpen(false); }}
+                    className="w-full text-left px-4 py-3 text-white/80 hover:bg-white/[0.05] rounded-lg transition-colors"
+                  >
+                    Aktueller Tag
+                  </button>
+                  <button
+                    onClick={() => { setShowAddTask(true); setMobileMenuOpen(false); }}
+                    className="w-full text-left px-4 py-3 text-white/80 hover:bg-white/[0.05] rounded-lg transition-colors flex items-center gap-2"
+                  >
+                    <Plus size={18} />
+                    <span>Aufgabe hinzufügen</span>
+                  </button>
+                </>
               )}
             </nav>
           </div>
         </div>
       )}
 
-      {/* Main Content - mit Padding für Header */}
-      <main className="pt-16 min-h-screen overflow-y-auto">
+      {/* Floating Action Button (FAB) - Only when plan exists */}
+      {dayPlan && (
+        <button
+          onClick={() => setShowAddTask(true)}
+          className="fixed z-40 w-14 h-14 rounded-full backdrop-blur-xl bg-white/[0.12] hover:bg-white/[0.18] border border-white/[0.2] hover:border-blue-400/60 text-white shadow-2xl shadow-blue-500/30 hover:shadow-[0_0_40px_rgba(96,165,250,0.5)] transition-all duration-300 flex items-center justify-center group hover:scale-110 active:scale-95"
+          style={{ 
+            bottom: 'max(1rem, calc(1rem + env(safe-area-inset-bottom)))',
+            right: 'max(1rem, calc(1rem + env(safe-area-inset-right)))'
+          }}
+        >
+          <Plus size={24} className="group-hover:rotate-90 transition-transform duration-300" />
+        </button>
+      )}
+
+      {/* Main Content - mit Padding für Header + Safe Area */}
+      <main className="min-h-screen overflow-y-auto" style={{ paddingTop: 'calc(4rem + env(safe-area-inset-top))' }}>
         {/* Overview - PREMIUM Welcome Screen with Calendar */}
         {activeView === 'overview' && (
           <PremiumWelcome

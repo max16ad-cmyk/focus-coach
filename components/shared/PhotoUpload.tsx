@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Camera, X, Upload } from 'lucide-react';
+import { GLASS_EFFECTS, PREMIUM_COMPONENTS } from '../../theme-premium';
 
 interface PhotoUploadProps {
   onImageSelect: (file: File) => void;
@@ -54,7 +55,7 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({
 
       {preview ? (
         <div className="relative">
-          <div className="aspect-video bg-slate-800 rounded-lg overflow-hidden">
+          <div className={`${GLASS_EFFECTS.card.base} rounded-2xl overflow-hidden aspect-video`}>
             <img
               src={preview}
               alt="Vorschau"
@@ -64,9 +65,9 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({
           {!disabled && (
             <button
               onClick={handleRemove}
-              className="absolute top-2 right-2 bg-red-600 hover:bg-red-500 text-white rounded-full p-2 transition-colors"
+              className="absolute top-4 right-4 bg-red-500/90 hover:bg-red-500 text-white rounded-full p-2 transition-all backdrop-blur-md border border-red-400/30"
             >
-              <X size={16} />
+              <X size={18} />
             </button>
           )}
         </div>
@@ -74,14 +75,15 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({
         <button
           onClick={handleClick}
           disabled={disabled}
-          className="w-full aspect-video bg-slate-900/50 border-2 border-dashed border-slate-700 rounded-lg flex flex-col items-center justify-center gap-3 hover:border-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className={`w-full aspect-video ${GLASS_EFFECTS.card.base} rounded-2xl flex flex-col items-center justify-center gap-4 hover:bg-white/[0.05] transition-all disabled:opacity-50 disabled:cursor-not-allowed group`}
         >
-          <Camera size={48} className="text-slate-500" />
-          <span className="text-slate-400">Foto auswählen</span>
-          <Upload size={20} className="text-slate-500" />
+          <div className={`${GLASS_EFFECTS.card.base} rounded-full p-4 group-hover:scale-110 transition-transform`}>
+            <Camera size={32} className="text-white/60" />
+          </div>
+          <span className="text-white/60 text-sm">Foto auswählen</span>
+          <Upload size={18} className="text-white/40" />
         </button>
       )}
     </div>
   );
 };
-

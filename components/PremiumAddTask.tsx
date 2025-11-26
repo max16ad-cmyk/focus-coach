@@ -47,8 +47,8 @@ export const PremiumAddTask: React.FC<PremiumAddTaskProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <div className={`${GLASS_EFFECTS.card.base} rounded-3xl max-w-2xl w-full p-8 lg:p-10 relative`}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-2xl" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
+      <div className={`${GLASS_EFFECTS.modal.content} rounded-3xl max-w-2xl w-full p-8 lg:p-10 relative`}>
         
         {/* Close Button */}
         <button

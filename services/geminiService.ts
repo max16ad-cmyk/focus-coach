@@ -278,9 +278,12 @@ Antworte NUR mit validem JSON:
         }
         throw new Error("Empty response");
 
-    } catch (error) {
-        console.error("Task analysis failed:", error);
-        // Fallback
+    } catch (error: any) {
+        // Log error but don't throw - use fallback instead
+        const errorMessage = error?.message || error?.status || 'Unknown error';
+        console.warn("Task analysis failed, using fallback:", errorMessage);
+        
+        // Fallback: Simple parsing
         const tasks: AnalyzedTask[] = userInput.split(/[.,;]/).filter(t => t.trim()).slice(0, 5).map((t, i) => ({
             id: `task-${Date.now()}-${i}`,
             title: t.trim(),
@@ -292,9 +295,25 @@ Antworte NUR mit validem JSON:
             suggestedStartTime: `${9 + i}:00`,
             suggestedEndTime: `${10 + i}:00`,
         }));
+        
+        // If no tasks found, create one from entire input
+        if (tasks.length === 0) {
+            tasks.push({
+                id: `task-${Date.now()}`,
+                title: userInput.trim() || 'Neue Aufgabe',
+                category: 'Erledigung' as const,
+                duration: 60,
+                requiresProof: false,
+                proofType: null,
+                proofDescription: '',
+                suggestedStartTime: '09:00',
+                suggestedEndTime: '10:00',
+            });
+        }
+        
         return {
             tasks,
-            coachMessage: "Plan erstellt. Bitte überprüfe die Aufgaben."
+            coachMessage: "Aufgabe hinzugefügt. Du kannst Details später anpassen."
         };
     }
 };

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CoachPersonality, UserSettings } from '../types';
-import { CoachMessage } from './coach/CoachMessage';
 import { Settings, X, Moon, Lock, Shield, Clock } from 'lucide-react';
+import { buildHeadline, buildBodyText, GLASS_EFFECTS, PREMIUM_LAYOUT, PREMIUM_COMPONENTS } from '../theme-premium';
 
 interface SettingsScreenProps {
   settings: UserSettings;
@@ -29,268 +29,277 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ settings, onUpda
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 overflow-y-auto">
-      <div className="min-h-screen p-4 md:p-8">
-        <div className="max-w-3xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 space-y-8">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Settings size={24} className="text-slate-400" />
-              <h2 className="text-2xl font-bold text-white">Einstellungen</h2>
-            </div>
-            <button
-              onClick={onClose}
-              className="text-slate-400 hover:text-white transition-colors"
-            >
-              <X size={24} />
-            </button>
-          </div>
-
-          {/* Divider */}
-          <div className="border-t border-slate-800"></div>
-
-          {/* Coach Personality */}
-          <div>
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <Shield size={20} />
-              Coach-Persönlichkeit
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {personalityOptions.map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() => updateSetting('coachPersonality', option.value)}
-                  className={`p-4 rounded-xl border-2 transition-all ${
-                    localSettings.coachPersonality === option.value
-                      ? 'border-blue-500 bg-blue-950/30'
-                      : 'border-slate-700 bg-slate-800/50 hover:border-slate-600'
-                  }`}
-                >
-                  <div className="text-3xl mb-2">{option.icon}</div>
-                  <div className="text-sm font-medium text-white mb-1">{option.label}</div>
-                  <div className="text-xs text-slate-400">{option.description}</div>
-                  {localSettings.coachPersonality === option.value && (
-                    <div className="mt-2 text-xs text-blue-400">✓ Aktiv</div>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Divider */}
-          <div className="border-t border-slate-800"></div>
-
-          {/* Morning Lock */}
-          <div>
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <span>🌅</span>
-              Morgen-Planung
-            </h3>
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <label className="flex items-center gap-2 text-slate-300">
-                  <input
-                    type="checkbox"
-                    checked={localSettings.morningLockEnabled}
-                    onChange={(e) => updateSetting('morningLockEnabled', e.target.checked)}
-                    className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-blue-500 focus:ring-blue-500"
-                  />
-                  <span>Morgen-Planung aktivieren</span>
-                </label>
-              </div>
-
-              {localSettings.morningLockEnabled && (
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm text-slate-400 mb-2">Start</label>
-                    <input
-                      type="time"
-                      value={localSettings.morningLockStart}
-                      onChange={(e) => updateSetting('morningLockStart', e.target.value)}
-                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm text-slate-400 mb-2">Ende</label>
-                    <input
-                      type="time"
-                      value={localSettings.morningLockEnd}
-                      onChange={(e) => updateSetting('morningLockEnd', e.target.value)}
-                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white"
-                    />
-                  </div>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-2xl z-50 overflow-y-auto" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+      <div className="min-h-screen p-4 md:p-8 lg:p-12">
+        <div className={`${PREMIUM_LAYOUT.container.medium} relative z-10`}>
+          <div className={`${GLASS_EFFECTS.modal.content} rounded-3xl p-6 md:p-8 lg:p-10 space-y-8`}>
+            
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className={`${GLASS_EFFECTS.card.base} rounded-xl p-2`}>
+                  <Settings size={24} className="text-white/80" />
                 </div>
-              )}
-              <p className="text-xs text-slate-500">
-                Wenn aktiviert, erscheint die Planungsansicht nur in diesem Zeitfenster, wenn noch kein Plan erstellt wurde.
-              </p>
-            </div>
-          </div>
-
-          {/* Divider */}
-          <div className="border-t border-slate-800"></div>
-
-          {/* Night Mode */}
-          <div>
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <Moon size={20} />
-              Nachtmodus
-            </h3>
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <label className="flex items-center gap-2 text-slate-300">
-                  <input
-                    type="checkbox"
-                    checked={localSettings.nightModeEnabled}
-                    onChange={(e) => updateSetting('nightModeEnabled', e.target.checked)}
-                    className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-blue-500 focus:ring-blue-500"
-                  />
-                  <span>Nachtmodus aktivieren</span>
-                </label>
+                <h2 className={buildHeadline('md', false)}>
+                  Einstellungen
+                </h2>
               </div>
+              <button
+                onClick={onClose}
+                className={`${GLASS_EFFECTS.card.base} rounded-xl p-2 text-white/60 hover:text-white hover:bg-white/[0.08] transition-all`}
+              >
+                <X size={24} />
+              </button>
+            </div>
 
-              {localSettings.nightModeEnabled && (
-                <>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm text-slate-400 mb-2">Start</label>
-                      <input
-                        type="time"
-                        value={localSettings.nightModeStart}
-                        onChange={(e) => updateSetting('nightModeStart', e.target.value)}
-                        className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm text-slate-400 mb-2">Ende</label>
-                      <input
-                        type="time"
-                        value={localSettings.nightModeEnd}
-                        onChange={(e) => updateSetting('nightModeEnd', e.target.value)}
-                        className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white"
-                      />
-                    </div>
-                  </div>
+            {/* Divider */}
+            <div className="border-t border-white/[0.08]"></div>
 
-                  <div className="flex items-center gap-2 text-slate-300">
+            {/* Coach Personality */}
+            <div>
+              <h3 className={`${buildBodyText('md', 'semibold')} mb-4 flex items-center gap-2`}>
+                <Shield size={20} className="text-blue-400" />
+                Coach-Persönlichkeit
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {personalityOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => updateSetting('coachPersonality', option.value)}
+                    className={`${GLASS_EFFECTS.card.base} ${GLASS_EFFECTS.card.hover} rounded-2xl p-5 transition-all ${
+                      localSettings.coachPersonality === option.value
+                        ? 'border-l-4 border-l-blue-400/70 shadow-[0_0_30px_rgba(96,165,250,0.2)]'
+                        : ''
+                    }`}
+                  >
+                    <div className="text-4xl mb-3">{option.icon}</div>
+                    <div className={`${buildBodyText('sm', 'semibold')} mb-1`}>{option.label}</div>
+                    <div className="text-xs text-white/50 leading-relaxed">{option.description}</div>
+                    {localSettings.coachPersonality === option.value && (
+                      <div className="mt-3 text-xs text-blue-400 flex items-center gap-1">
+                        <span>✓</span>
+                        <span>Aktiv</span>
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="border-t border-white/[0.08]"></div>
+
+            {/* Morning Lock */}
+            <div>
+              <h3 className={`${buildBodyText('md', 'semibold')} mb-4 flex items-center gap-2`}>
+                <span className="text-2xl">🌅</span>
+                Morgen-Planung
+              </h3>
+              <div className={`${GLASS_EFFECTS.card.base} rounded-2xl p-6 space-y-4`}>
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-3 text-white/80 cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={localSettings.nightModeNoUnlock}
-                      onChange={(e) => updateSetting('nightModeNoUnlock', e.target.checked)}
-                      className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-blue-500 focus:ring-blue-500"
+                      checked={localSettings.morningLockEnabled}
+                      onChange={(e) => updateSetting('morningLockEnabled', e.target.checked)}
+                      className="w-5 h-5 rounded border-white/20 bg-white/[0.05] text-blue-500 focus:ring-blue-500 focus:ring-2"
                     />
-                    <span>Kein Notfall-Unlock im Nachtmodus</span>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Divider */}
-          <div className="border-t border-slate-800"></div>
-
-          {/* Proof Settings */}
-          <div>
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <Lock size={20} />
-              Nachweis-Einstellungen
-            </h3>
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-slate-300">
-                <input
-                  type="checkbox"
-                  checked={localSettings.requirePhotoProof}
-                  onChange={(e) => updateSetting('requirePhotoProof', e.target.checked)}
-                  className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-blue-500 focus:ring-blue-500"
-                />
-                <span>Foto-Nachweis standardmäßig aktivieren</span>
-              </div>
-
-              <div>
-                <label className="block text-sm text-slate-400 mb-2">Nachweis-Strenge</label>
-                <select
-                  value={localSettings.proofStrictness}
-                  onChange={(e) => updateSetting('proofStrictness', e.target.value as 'low' | 'medium' | 'high')}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white"
-                >
-                  <option value="low">Niedrig (meist akzeptiert)</option>
-                  <option value="medium">Mittel (ausgewogen)</option>
-                  <option value="high">Hoch (sehr streng)</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Divider */}
-          <div className="border-t border-slate-800"></div>
-
-          {/* Emergency Unlock */}
-          <div>
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <Clock size={20} />
-              Notfall-Zugriff
-            </h3>
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-slate-300">
-                <input
-                  type="checkbox"
-                  checked={localSettings.emergencyUnlockEnabled}
-                  onChange={(e) => updateSetting('emergencyUnlockEnabled', e.target.checked)}
-                  className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-blue-500 focus:ring-blue-500"
-                />
-                <span>Notfall-Zugriff aktivieren</span>
-              </div>
-
-              {localSettings.emergencyUnlockEnabled && (
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm text-slate-400 mb-2">Dauer (Minuten)</label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="60"
-                      value={localSettings.emergencyUnlockDuration}
-                      onChange={(e) => updateSetting('emergencyUnlockDuration', parseInt(e.target.value))}
-                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm text-slate-400 mb-2">Cooldown (Stunden)</label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="168"
-                      value={localSettings.emergencyUnlockCooldown}
-                      onChange={(e) => updateSetting('emergencyUnlockCooldown', parseInt(e.target.value))}
-                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white"
-                    />
-                  </div>
+                    <span>Morgen-Planung aktivieren</span>
+                  </label>
                 </div>
-              )}
+
+                {localSettings.morningLockEnabled && (
+                  <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/[0.05]">
+                    <div>
+                      <label className={`${buildBodyText('xs', 'medium')} block mb-2 text-white/60`}>Start</label>
+                      <input
+                        type="time"
+                        value={localSettings.morningLockStart}
+                        onChange={(e) => updateSetting('morningLockStart', e.target.value)}
+                        className={`${GLASS_EFFECTS.input.base} w-full rounded-xl px-4 py-3 text-white`}
+                      />
+                    </div>
+                    <div>
+                      <label className={`${buildBodyText('xs', 'medium')} block mb-2 text-white/60`}>Ende</label>
+                      <input
+                        type="time"
+                        value={localSettings.morningLockEnd}
+                        onChange={(e) => updateSetting('morningLockEnd', e.target.value)}
+                        className={`${GLASS_EFFECTS.input.base} w-full rounded-xl px-4 py-3 text-white`}
+                      />
+                    </div>
+                  </div>
+                )}
+                <p className="text-xs text-white/40 pt-2">
+                  Wenn aktiviert, erscheint die Planungsansicht nur in diesem Zeitfenster, wenn noch kein Plan erstellt wurde.
+                </p>
+              </div>
             </div>
-          </div>
 
-          {/* Divider */}
-          <div className="border-t border-slate-800"></div>
+            {/* Divider */}
+            <div className="border-t border-white/[0.08]"></div>
 
-          {/* Save Button */}
-          <div className="flex gap-4">
-            <button
-              onClick={onClose}
-              className="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-medium py-3 px-6 rounded-xl transition-colors"
-            >
-              Abbrechen
-            </button>
-            <button
-              onClick={handleSave}
-              className="flex-1 bg-white text-slate-900 font-semibold py-3 px-6 rounded-xl hover:bg-slate-100 transition-colors"
-            >
-              Speichern
-            </button>
+            {/* Night Mode */}
+            <div>
+              <h3 className={`${buildBodyText('md', 'semibold')} mb-4 flex items-center gap-2`}>
+                <Moon size={20} className="text-indigo-400" />
+                Nachtmodus
+              </h3>
+              <div className={`${GLASS_EFFECTS.card.base} rounded-2xl p-6 space-y-4`}>
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-3 text-white/80 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={localSettings.nightModeEnabled}
+                      onChange={(e) => updateSetting('nightModeEnabled', e.target.checked)}
+                      className="w-5 h-5 rounded border-white/20 bg-white/[0.05] text-blue-500 focus:ring-blue-500 focus:ring-2"
+                    />
+                    <span>Nachtmodus aktivieren</span>
+                  </label>
+                </div>
+
+                {localSettings.nightModeEnabled && (
+                  <>
+                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/[0.05]">
+                      <div>
+                        <label className={`${buildBodyText('xs', 'medium')} block mb-2 text-white/60`}>Start</label>
+                        <input
+                          type="time"
+                          value={localSettings.nightModeStart}
+                          onChange={(e) => updateSetting('nightModeStart', e.target.value)}
+                          className={`${GLASS_EFFECTS.input.base} w-full rounded-xl px-4 py-3 text-white`}
+                        />
+                      </div>
+                      <div>
+                        <label className={`${buildBodyText('xs', 'medium')} block mb-2 text-white/60`}>Ende</label>
+                        <input
+                          type="time"
+                          value={localSettings.nightModeEnd}
+                          onChange={(e) => updateSetting('nightModeEnd', e.target.value)}
+                          className={`${GLASS_EFFECTS.input.base} w-full rounded-xl px-4 py-3 text-white`}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 pt-4 border-t border-white/[0.05]">
+                      <input
+                        type="checkbox"
+                        checked={localSettings.nightModeNoUnlock}
+                        onChange={(e) => updateSetting('nightModeNoUnlock', e.target.checked)}
+                        className="w-5 h-5 rounded border-white/20 bg-white/[0.05] text-blue-500 focus:ring-blue-500 focus:ring-2"
+                      />
+                      <span className="text-white/80">Kein Notfall-Unlock im Nachtmodus</span>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="border-t border-white/[0.08]"></div>
+
+            {/* Proof Settings */}
+            <div>
+              <h3 className={`${buildBodyText('md', 'semibold')} mb-4 flex items-center gap-2`}>
+                <Lock size={20} className="text-amber-400" />
+                Nachweis-Einstellungen
+              </h3>
+              <div className={`${GLASS_EFFECTS.card.base} rounded-2xl p-6 space-y-4`}>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={localSettings.requirePhotoProof}
+                    onChange={(e) => updateSetting('requirePhotoProof', e.target.checked)}
+                    className="w-5 h-5 rounded border-white/20 bg-white/[0.05] text-blue-500 focus:ring-blue-500 focus:ring-2"
+                  />
+                  <span className="text-white/80">Foto-Nachweis standardmäßig aktivieren</span>
+                </div>
+
+                <div className="pt-4 border-t border-white/[0.05]">
+                  <label className={`${buildBodyText('xs', 'medium')} block mb-2 text-white/60`}>Nachweis-Strenge</label>
+                  <select
+                    value={localSettings.proofStrictness}
+                    onChange={(e) => updateSetting('proofStrictness', e.target.value as 'low' | 'medium' | 'high')}
+                    className={`${GLASS_EFFECTS.input.base} w-full rounded-xl px-4 py-3 text-white`}
+                  >
+                    <option value="low">Niedrig (meist akzeptiert)</option>
+                    <option value="medium">Mittel (ausgewogen)</option>
+                    <option value="high">Hoch (sehr streng)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="border-t border-white/[0.08]"></div>
+
+            {/* Emergency Unlock */}
+            <div>
+              <h3 className={`${buildBodyText('md', 'semibold')} mb-4 flex items-center gap-2`}>
+                <Clock size={20} className="text-red-400" />
+                Notfall-Zugriff
+              </h3>
+              <div className={`${GLASS_EFFECTS.card.base} rounded-2xl p-6 space-y-4`}>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={localSettings.emergencyUnlockEnabled}
+                    onChange={(e) => updateSetting('emergencyUnlockEnabled', e.target.checked)}
+                    className="w-5 h-5 rounded border-white/20 bg-white/[0.05] text-blue-500 focus:ring-blue-500 focus:ring-2"
+                  />
+                  <span className="text-white/80">Notfall-Zugriff aktivieren</span>
+                </div>
+
+                {localSettings.emergencyUnlockEnabled && (
+                  <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/[0.05]">
+                    <div>
+                      <label className={`${buildBodyText('xs', 'medium')} block mb-2 text-white/60`}>Dauer (Minuten)</label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="60"
+                        value={localSettings.emergencyUnlockDuration}
+                        onChange={(e) => updateSetting('emergencyUnlockDuration', parseInt(e.target.value))}
+                        className={`${GLASS_EFFECTS.input.base} w-full rounded-xl px-4 py-3 text-white`}
+                      />
+                    </div>
+                    <div>
+                      <label className={`${buildBodyText('xs', 'medium')} block mb-2 text-white/60`}>Cooldown (Stunden)</label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="168"
+                        value={localSettings.emergencyUnlockCooldown}
+                        onChange={(e) => updateSetting('emergencyUnlockCooldown', parseInt(e.target.value))}
+                        className={`${GLASS_EFFECTS.input.base} w-full rounded-xl px-4 py-3 text-white`}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="border-t border-white/[0.08]"></div>
+
+            {/* Save Button */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button
+                onClick={onClose}
+                className={`${PREMIUM_COMPONENTS.button.secondary} flex-1`}
+              >
+                Abbrechen
+              </button>
+              <button
+                onClick={handleSave}
+                className={`${PREMIUM_COMPONENTS.button.primary} flex-1`}
+              >
+                Speichern
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 };
-

@@ -132,6 +132,11 @@ export const GLASS_EFFECTS = {
     base: 'backdrop-blur-md bg-white/[0.05] border border-white/[0.1] focus:border-white/[0.2] focus:bg-white/[0.08]',
   },
   
+  button: {
+    primary: 'backdrop-blur-md bg-white/[0.08] border border-white/[0.15] shadow-lg hover:shadow-blue-500/20 hover:border-blue-400/50 transition-all duration-300',
+    secondary: 'backdrop-blur-md bg-transparent border border-white/[0.1] hover:bg-white/[0.05] transition-all duration-300',
+  },
+  
   modal: {
     backdrop: 'backdrop-blur-2xl bg-black/60',
     content: 'backdrop-blur-xl bg-white/[0.05] border border-white/[0.1]',

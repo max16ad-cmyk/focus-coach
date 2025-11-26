@@ -88,20 +88,10 @@ export const PremiumActiveDay: React.FC<PremiumActiveDayProps> = ({
 
         {/* All Tasks */}
         <div>
-          <div className="flex items-center justify-between mb-8">
+          <div className="mb-8">
             <h2 className="text-2xl font-serif italic text-white">
               Tagesübersicht
             </h2>
-            
-            {onAddTask && (
-              <button
-                onClick={onAddTask}
-                className="backdrop-blur-xl bg-white/[0.08] hover:bg-white/[0.15] border border-white/[0.15] hover:border-blue-400/70 text-white font-medium py-3 px-8 rounded-full transition-all duration-300 flex items-center gap-2 shadow-[0_0_30px_rgba(96,165,250,0.15)] hover:shadow-[0_0_40px_rgba(96,165,250,0.4)] group"
-              >
-                <Plus size={20} className="group-hover:rotate-90 transition-transform duration-300" />
-                <span>Aufgabe hinzufügen</span>
-              </button>
-            )}
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

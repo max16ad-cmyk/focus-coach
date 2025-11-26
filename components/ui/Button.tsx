@@ -1,5 +1,5 @@
 import React from 'react';
-import { COLORS, COMPONENT_STYLES, buildClassName } from '../../theme';
+import { COMPONENT_STYLES, buildClassName } from '../../theme';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'success';
 export type ButtonSize = 'sm' | 'md' | 'lg';
@@ -12,11 +12,11 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const VARIANT_STYLES: Record<ButtonVariant, string> = {
-  primary: `bg-${COLORS.primary.DEFAULT} hover:bg-${COLORS.primary.hover} text-white`,
-  secondary: `bg-${COLORS.background.elevated} hover:bg-${COLORS.background.hover} text-white border border-${COLORS.border.DEFAULT}`,
-  ghost: `bg-transparent hover:bg-${COLORS.background.hover} text-white`,
-  danger: `bg-${COLORS.status.error.DEFAULT} hover:bg-${COLORS.status.error.dark} text-white`,
-  success: `bg-${COLORS.status.success.DEFAULT} hover:bg-${COLORS.status.success.dark} text-white`,
+  primary: 'bg-blue-600 hover:bg-blue-500 text-white',
+  secondary: 'bg-slate-900 hover:bg-slate-800 text-white border border-slate-800',
+  ghost: 'bg-transparent hover:bg-slate-800 text-white',
+  danger: 'bg-red-500 hover:bg-red-600 text-white',
+  success: 'bg-green-500 hover:bg-green-600 text-white',
 };
 
 /**

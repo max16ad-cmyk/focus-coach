@@ -1,8 +1,8 @@
 import React from 'react';
 import { CoachPersonality } from '../../types';
 import { CoachAvatar } from './CoachAvatar';
+import { GLASS_EFFECTS, buildBodyText } from '../../theme-premium';
 import { COACH_STYLES } from '../../theme';
-import { buildClassName } from '../../theme';
 
 interface CoachMessageProps {
   personality: CoachPersonality;
@@ -17,19 +17,12 @@ export const CoachMessage: React.FC<CoachMessageProps> = ({
 }) => {
   const coachStyle = COACH_STYLES[personality];
   
-  const boxClasses = buildClassName(
-    'bg-slate-900/50 border border-slate-800 rounded-2xl p-6',
-    coachStyle.border,
-    coachStyle.bg,
-    className
-  );
-  
   return (
-    <div className={boxClasses}>
+    <div className={`${GLASS_EFFECTS.card.base} rounded-2xl p-6 border-l-4 ${coachStyle.border} ${className}`}>
       <div className="flex items-start gap-4">
         <CoachAvatar personality={personality} size="md" />
         <div className="flex-1">
-          <p className="text-base text-slate-300 leading-relaxed">
+          <p className={`${buildBodyText('md')} leading-relaxed`}>
             {message}
           </p>
         </div>
@@ -37,4 +30,3 @@ export const CoachMessage: React.FC<CoachMessageProps> = ({
     </div>
   );
 };
-
