@@ -1,0 +1,5 @@
+{
+  "name": "Get Shit Done",
+  "description": "A high-performance productivity dashboard that locks access to distraction links until specific goals are achieved, powered by Gemini AI for task breakdown.",
+  "requestFramePermissions": []
+}
