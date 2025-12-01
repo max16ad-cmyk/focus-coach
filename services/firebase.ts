@@ -45,6 +45,9 @@ try {
     console.error("Firebase Initialization Error:", e);
 }
 
+// Export db for analytics
+export { db };
+
 // =============================================
 // AUTH FUNCTIONS
 // =============================================
