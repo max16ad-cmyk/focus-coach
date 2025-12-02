@@ -265,7 +265,7 @@ ipcMain.handle('get-installed-apps', async () => {
     // Read from Windows Registry
     const command = `reg query "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall" /s /v DisplayName 2>nul | findstr /i "DisplayName"`;
     
-    const { stdout } = await execAsync(command, { shell: true, m
+    const { stdout } = await execAsync(command, { shell: true, maxBuffer: 1024 * 1024 });
 
       const apps = [];
       const lines = stdout.split('\n').filter(line => line.trim())
