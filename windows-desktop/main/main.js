@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, shell, Notification } = require('electron');
 const path = require('path');
 const { autoUpdater } = require('electron-updater');
 const { WindowsFirewallBlocker } = require('../native/blocking/firewall');
