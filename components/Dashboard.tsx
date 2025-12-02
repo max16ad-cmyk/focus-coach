@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CoachPersonality, Task, DayPlan, UserSettings } from '../types';
 import { MorningLock } from './modes/MorningLock';
 import { SettingsScreen } from './SettingsScreen';
+import { WindowsDownload } from './WindowsDownload';
 import { PhotoUpload } from './shared/PhotoUpload';
 import { PremiumWelcome } from './PremiumWelcome';
 import { PremiumTaskCard } from './PremiumTaskCard';
@@ -13,7 +14,7 @@ import { PremiumNightMode } from './PremiumNightMode';
 import { PremiumAddTask } from './PremiumAddTask';
 import { analyzeTasks, verifyProof } from '../services/geminiService';
 import { saveDayPlan } from '../services/firebase';
-import { LAYOUT } from './constants';
+// import { LAYOUT } from './constants'; // Not used
 import { useModeManager, usePlanHandlers, useTaskHandlers, useTaskBlocking } from '../hooks';
 import { 
   Calendar, 
@@ -343,13 +344,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 {user.name}
               </div>
               
-              {/* Settings Button */}
-              <button
-                onClick={() => setShowSettings(true)}
-                className="px-4 py-2 text-sm text-white/60 hover:text-white hover:bg-white/[0.05] transition-colors rounded-lg"
-              >
-                Einstellungen
-              </button>
+              {/* Windows Download & Settings */}
+              <div className="flex items-center gap-2">
+                <WindowsDownload />
+                <button
+                  onClick={() => setShowSettings(true)}
+                  className="px-4 py-2 text-sm text-white/60 hover:text-white hover:bg-white/[0.05] transition-colors rounded-lg"
+                >
+                  Einstellungen
+                </button>
+              </div>
               
               {/* Mobile Menu */}
               <button
