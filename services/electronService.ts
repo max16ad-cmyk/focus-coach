@@ -201,5 +201,50 @@ export const electronService = {
       return { success: false };
     }
   },
+
+  /**
+   * Show desktop notification
+   */
+  async showNotification(options: {
+    title: string;
+    body: string;
+    silent?: boolean;
+  }): Promise<{ success: boolean; error?: string }> {
+    if (!this.isElectron || !window.electronAPI) {
+      // Fallback: Use browser notifications
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification(options.title, { body: options.body });
+        return { success: true };
+      }
+      return { success: false, error: 'Notifications not available' };
+    }
+
+    try {
+      return await window.electronAPI.showNotification(options);
+    } catch (error) {
+      console.error('Error showing notification:', error);
+      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+    }
+  },
+
+  /**
+   * Get list of installed apps (Windows only)
+   */
+  async getInstalledApps(): Promise<{
+    success: boolean;
+    apps?: Array<{ name: string; path?: string }>;
+    error?: string;
+  }> {
+    if (!this.isElectron || !window.electronAPI) {
+      return { success: false, apps: [], error: 'Not running in Electron' };
+    }
+
+    try {
+      return await window.electronAPI.getInstalledApps();
+    } catch (error) {
+      console.error('Error getting installed apps:', error);
+      return { success: false, apps: [], error: error instanceof Error ? error.message : 'Unknown error' };
+    }
+  },
 };
 

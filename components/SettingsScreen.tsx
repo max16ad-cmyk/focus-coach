@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CoachPersonality, UserSettings } from '../types';
 import { Settings, X, Moon, Lock, Shield, Clock } from 'lucide-react';
 import { buildHeadline, buildBodyText, GLASS_EFFECTS, PREMIUM_LAYOUT, PREMIUM_COMPONENTS } from '../theme-premium';
+import { BlockingSettings } from './BlockingSettings';
 
 interface SettingsScreenProps {
   settings: UserSettings;
@@ -277,6 +278,23 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ settings, onUpda
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* Divider */}
+            <div className="border-t border-white/[0.08]"></div>
+
+            {/* Blocking Settings (Windows only) */}
+            <div>
+              <h3 className={`${buildBodyText('md', 'semibold')} mb-4 flex items-center gap-2`}>
+                <Shield size={20} className="text-green-400" />
+                Blockierung (Windows)
+              </h3>
+              <BlockingSettings
+                blocklists={localSettings.blocklists || []}
+                onUpdate={(blocklists) => updateSetting('blocklists', blocklists)}
+                defaultBlocklistId={localSettings.defaultBlocklistId}
+                onDefaultChange={(id) => updateSetting('defaultBlocklistId', id)}
+              />
             </div>
 
             {/* Divider */}
