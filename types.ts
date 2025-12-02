@@ -31,6 +31,8 @@ export interface Task {
   proofImageUrl?: string;
   verified?: boolean;
   createdAt?: number;
+  // Blocking
+  blocklistId?: string; // ID of blocklist to use during this task
 }
 
 export type TaskCategory = 'Lernen' | 'Haushalt' | 'Erledigung' | 'Arbeit' | 'Sport' | 'Kreativ';
@@ -80,6 +82,14 @@ export interface LinkAnalysisResult {
 }
 
 // Focus Coach Settings
+export interface Blocklist {
+  id: string;
+  name: string;
+  apps: string[]; // App paths or names for Windows
+  urls: string[]; // Domains to block
+  createdAt?: number;
+}
+
 export interface UserSettings {
   coachPersonality: CoachPersonality;
   nightModeStart: string; // "23:00"
@@ -97,6 +107,9 @@ export interface UserSettings {
   morningLockEnabled: boolean;
   morningLockStart: string; // "06:00"
   morningLockEnd: string;   // "12:00"
+  // Blocking Settings
+  blocklists?: Blocklist[]; // List of blocklists
+  defaultBlocklistId?: string; // Default blocklist to use
 }
 
 // Task Analysis Result from AI
