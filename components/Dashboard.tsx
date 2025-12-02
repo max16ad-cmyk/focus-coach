@@ -14,7 +14,7 @@ import { PremiumAddTask } from './PremiumAddTask';
 import { analyzeTasks, verifyProof } from '../services/geminiService';
 import { saveDayPlan } from '../services/firebase';
 import { LAYOUT } from './constants';
-import { useModeManager, usePlanHandlers, useTaskHandlers } from '../hooks';
+import { useModeManager, usePlanHandlers, useTaskHandlers, useTaskBlocking } from '../hooks';
 import { 
   Calendar, 
   Settings, 
