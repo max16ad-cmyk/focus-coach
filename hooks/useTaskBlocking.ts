@@ -98,6 +98,13 @@ export function useTaskBlocking({
       },
     });
 
+    // Show notification
+    await electronService.showNotification({
+      title: 'Blockierung aktiviert',
+      body: `Apps und Websites werden während "${task.title}" blockiert`,
+      silent: false,
+    });
+
     return { success: true };
   }, [blocking]);
 
@@ -131,6 +138,13 @@ export function useTaskBlocking({
         taskTitle: task.title,
         blocklistId: blocklist.id,
       },
+    });
+
+    // Show notification
+    await electronService.showNotification({
+      title: 'Blockierung beendet',
+      body: `Blockierung für "${task.title}" wurde entfernt`,
+      silent: false,
     });
 
     return { success: true };
