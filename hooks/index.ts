@@ -11,4 +11,6 @@ export { usePlanHandlers } from './usePlanHandlers';
 
 export { useSpeechRecognition } from './useSpeechRecognition';
 export { useAppMode } from './useAppMode';
+export { useElectronBlocking } from './useElectronBlocking';
+export { useTaskBlocking } from './useTaskBlocking';
 
