@@ -97,6 +97,32 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const currentMode = getCurrentMode();
   const activeView = view === 'overview' ? currentMode : view;
 
+  // Get current task
+  const getCurrentTask = (): Task | null => {
+    if (!dayPlan) return null;
+    const now = new Date();
+    const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    
+    // Find task matching current time
+    const timeBasedTask = dayPlan.tasks.find((task) => {
+      if (task.completed) return false;
+      if (!task.suggestedStartTime || !task.suggestedEndTime) return false;
+      return currentTime >= task.suggestedStartTime && currentTime <= task.suggestedEndTime;
+    });
+
+    if (timeBasedTask) return timeBasedTask;
+    return dayPlan.tasks.find(t => !t.completed && t.status === 'in_progress') || null;
+  };
+
+  // Task-based blocking (Windows only)
+  const taskBlocking = useTaskBlocking({
+    currentTask: getCurrentTask(),
+    blocklists: settings.blocklists || [],
+    settings: {
+      defaultBlocklistId: settings.defaultBlocklistId,
+    },
+  });
+
   // Handle plan creation
   const handleCreatePlan = async () => {
     if (!planInput.trim()) return;
