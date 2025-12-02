@@ -89,3 +89,4 @@ Die App funktioniert **immer**, auch ohne API Key! Der Fallback-Parser ist sehr 
 
 
 
+

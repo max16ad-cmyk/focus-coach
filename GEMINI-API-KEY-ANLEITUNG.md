@@ -69,3 +69,4 @@ Die App verwendet die KI automatisch, wenn der Key vorhanden ist. Du kannst es Ã
 
 
 
+

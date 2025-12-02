@@ -281,3 +281,4 @@ print("⚠️ Live-Parsing fehlgeschlagen für: '\(text)'")
 
 
 
+
