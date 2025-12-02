@@ -26,6 +26,12 @@ declare global {
       // Admin rights check
       checkAdminRights: () => Promise<{ hasAdmin: boolean }>;
       
+      // Notifications
+      showNotification: (options: { title: string; body: string; silent?: boolean }) => Promise<{ success: boolean; error?: string }>;
+      
+      // App discovery
+      getInstalledApps: () => Promise<{ success: boolean; apps?: Array<{ name: string; path?: string }>; error?: string }>;
+      
       // Platform info
       platform: string;
       isWindows: boolean;

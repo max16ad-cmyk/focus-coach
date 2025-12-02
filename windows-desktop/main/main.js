@@ -233,6 +233,64 @@ ipcMain.handle('check-admin-rights', async () => {
   }
 });
 
+// Show notification
+ipcMain.handle('show-notification', async (event, { title, body, silent = false }) => {
+  if (!Notification.isSupported()) {
+    return { success: false, error: 'Notifications not supported' };
+  }
+
+  try {
+    const notification = new Notification({
+      title: title || 'FocusCoach',
+      body: body || '',
+      silent: silent,
+      icon: path.join(__dirname, '../assets/icon.png'),
+    });
+
+    notification.show();
+    return { success: true };
+  } catch (error) {
+    console.error('Error showing notification:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+// Get installed apps (Windows Registry)
+ipcMain.handle('get-installed-apps', async () => {
+  try {
+    const { exec } = require('child_process');
+    const { promisify } = require('util');
+    const execAsync = promisify(exec);
+
+    // Read from Windows Registry
+    const command = `reg query "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall" /s /v DisplayName 2>nul | findstr /i "DisplayName"`;
+    
+    const { stdout } = await execAsync(command, { shell: true, maxBuffer: 10 * 1024 * 1024 });
+    
+    const apps: Array<{ name: string; path?: string }> = [];
+    const lines = stdout.split('\n').filter(line => line.trim());
+    
+    for (const line of lines) {
+      const match = line.match(/DisplayName\s+REG_SZ\s+(.+)/i);
+      if (match && match[1]) {
+        apps.push({ name: match[1].trim() });
+      }
+    }
+
+    // Also check common app locations
+    const commonPaths = [
+      'C:\\Program Files',
+      'C:\\Program Files (x86)',
+      process.env.LOCALAPPDATA + '\\Programs',
+    ];
+
+    return { success: true, apps: apps.slice(0, 100) }; // Limit to 100 apps
+  } catch (error) {
+    console.error('Error getting installed apps:', error);
+    return { success: false, apps: [], error: error.message };
+  }
+});
+
 
 
 

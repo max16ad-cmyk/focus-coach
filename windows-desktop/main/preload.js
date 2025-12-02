@@ -16,6 +16,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Admin rights check
   checkAdminRights: () => ipcRenderer.invoke('check-admin-rights'),
   
+  // Notifications
+  showNotification: (options) => ipcRenderer.invoke('show-notification', options),
+  
+  // App discovery
+  getInstalledApps: () => ipcRenderer.invoke('get-installed-apps'),
+  
   // Platform info
   platform: process.platform,
   isWindows: process.platform === 'win32'
