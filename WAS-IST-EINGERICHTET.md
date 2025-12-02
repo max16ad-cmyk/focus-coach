@@ -292,5 +292,5 @@ npm run build
 - `windows-desktop/DISTRIBUTION.md` - Wie verteilen
 
 
-Das ist ja crazy
+Das ist ja crazy wirklich
 
