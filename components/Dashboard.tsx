@@ -171,21 +171,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
     setAnalyzedTasks([]);
   };
 
-  // Get current task
-  const getCurrentTask = (): Task | null => {
-    if (!dayPlan) return null;
-    const now = new Date();
-    const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-    
-    return (
-      dayPlan.tasks.find((task) => {
-        if (task.completed) return false;
-        if (!task.suggestedStartTime || !task.suggestedEndTime) return false;
-        return currentTime >= task.suggestedStartTime && currentTime <= task.suggestedEndTime;
-      }) || dayPlan.tasks.find((t) => !t.completed) || null
-    );
-  };
-
   const pendingTasks = dayPlan?.tasks.filter(t => !t.completed).length || 0;
   const completedTasks = dayPlan?.tasks.filter(t => t.completed).length || 0;
   const totalTasks = dayPlan?.tasks.length || 0;
