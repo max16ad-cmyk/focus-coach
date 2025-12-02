@@ -267,8 +267,8 @@ ipcMain.handle('get-installed-apps', async () => {
     
     const { stdout } = await execAsync(command, { shell: true, maxBuffer: 1024 * 1024 });
 
-      const apps = [];
-      const lines = stdout.split('\n').filter(line => line.trim())
+    const apps = [];
+    const lines = stdout.split('\n').filter(line => line.trim());
     
     for (const line of lines) {
       const match = line.match(/DisplayName\s+REG_SZ\s+(.+)/i);
@@ -276,13 +276,6 @@ ipcMain.handle('get-installed-apps', async () => {
         apps.push({ name: match[1].trim() });
       }
     }
-
-    // Also check common app locations
-    const commonPaths = [
-      'C:\\Program Files',
-      'C:\\Program Files (x86)',
-      process.env.LOCALAPPDATA + '\\Programs',
-    ];
 
     return { success: true, apps: apps.slice(0, 100) }; // Limit to 100 apps
   } catch (error) {
